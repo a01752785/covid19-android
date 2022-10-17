@@ -22,9 +22,6 @@ class MainActivity : AppCompatActivity() {
         // setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setObservables()
-        configureRecyclerView()
     }
 
     override fun onStart() {
@@ -32,22 +29,5 @@ class MainActivity : AppCompatActivity() {
         viewModel.getAllCountryCovidData()
     }
 
-    private fun setObservables() {
-        viewModel.countries.observe(this) { countryList ->
-            countryAdapter?.countries = countryList.toTypedArray()
-            countryAdapter?.notifyDataSetChanged()
-        }
-    }
 
-    private fun configureRecyclerView() {
-        val countries = arrayOf(Country("Mexico", 1))
-        val layout = LinearLayoutManager(this)
-        layout.orientation = LinearLayoutManager.VERTICAL
-        binding.rvCountries.layoutManager = layout
-        countryAdapter = CountryAdapter(this, countries)
-        binding.rvCountries.adapter = countryAdapter
-
-        val divider = DividerItemDecoration(this, layout.orientation)
-        binding.rvCountries.addItemDecoration(divider)
-    }
 }

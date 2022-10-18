@@ -20,7 +20,7 @@
         android:label="fragment_country_graph"
         tools:layout="@layout/fragment_country_graph" >
         <argument
-            android:name="country"
+            android:name="countryName"
             app:argType="string" />
     </fragment>
 </navigation>

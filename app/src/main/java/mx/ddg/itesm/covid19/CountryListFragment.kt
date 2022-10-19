@@ -56,7 +56,7 @@ class CountryListFragment : Fragment() {
     }
 
     private fun configureRecyclerView() {
-        val countries = arrayOf(Country("Mexico", 1))
+        val countries = arrayOf(Country("Mexico", 0, 0, 0))
         val layout = LinearLayoutManager(requireContext())
         layout.orientation = LinearLayoutManager.VERTICAL
         binding.rvCountries.layoutManager = layout

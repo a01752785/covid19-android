@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -13,6 +14,7 @@ import com.anychart.anychart.AnyChartView
 import com.anychart.anychart.DataEntry
 import com.anychart.anychart.ValueDataEntry
 import com.anychart.anychart.Pie
+import com.bumptech.glide.Glide
 import mx.ddg.itesm.covid19.databinding.FragmentCountryGraphBinding
 import mx.ddg.itesm.covid19.viewmodel.CountryGraphViewModel
 
@@ -34,6 +36,7 @@ class CountryGraphFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         println(args.countryName)
+        subscribeCovidCountryData()
         viewModel.getCountryCovidData(args.countryName)
         val pie = AnyChart.pie()
 
@@ -47,5 +50,18 @@ class CountryGraphFragment : Fragment() {
         pie.setData(data)
         binding.anyChartView.setChart(pie)
         println("chart")
+    }
+
+    private fun subscribeCovidCountryData() {
+        viewModel.country.observe(viewLifecycleOwner) { countryData ->
+            binding.tvCurrentCountryName.text = countryData.name
+            val imgFlag = view?.findViewById<ImageView>(mx.ddg.itesm.covid19.R.id.imgCurrentFlag)
+            if (imgFlag != null) {
+                Glide.with(requireContext()).load(countryData.info["flag"]).into(imgFlag)
+            }
+            binding.tvCurrentCountryCases.text = countryData.cases.toString()
+            binding.tvCurrentCountryRecovered.text = countryData.recovered.toString()
+            binding.tvCurrentCountryDead.text = countryData.deaths.toString()
+        }
     }
 }

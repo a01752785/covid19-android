@@ -11,6 +11,8 @@ data class Country(
     val name: String,
     @SerializedName("cases")
     val cases: Int,
+    val deaths: Int,
+    val recovered: Int,
     @SerializedName("countryInfo")
     val info: Map<String, String> = mapOf(),
     val imageId: Int = 0,

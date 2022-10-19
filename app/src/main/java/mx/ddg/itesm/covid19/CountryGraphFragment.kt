@@ -37,6 +37,7 @@ class CountryGraphFragment : Fragment() {
         super.onStart()
         println(args.countryName)
         subscribeCovidCountryData()
+        subscribeCovidTimeSeriesData()
         viewModel.getCountryCovidData(args.countryName)
         val pie = AnyChart.pie()
 
@@ -52,6 +53,12 @@ class CountryGraphFragment : Fragment() {
         println("chart")
     }
 
+    private fun subscribeCovidTimeSeriesData() {
+        viewModel.countryTimeSeries.observe(viewLifecycleOwner) { countryTimeSeriesData ->
+            println(countryTimeSeriesData.name)
+        }
+    }
+
     private fun subscribeCovidCountryData() {
         viewModel.country.observe(viewLifecycleOwner) { countryData ->
             binding.tvCurrentCountryName.text = countryData.name
@@ -62,6 +69,9 @@ class CountryGraphFragment : Fragment() {
             binding.tvCurrentCountryCases.text = countryData.cases.toString()
             binding.tvCurrentCountryRecovered.text = countryData.recovered.toString()
             binding.tvCurrentCountryDead.text = countryData.deaths.toString()
+
+            // Trigger time series download
+            viewModel.getCountryTimeSeriesData(countryData.name, 5)
         }
     }
 }

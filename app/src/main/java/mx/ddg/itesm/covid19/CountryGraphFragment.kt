@@ -9,12 +9,11 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.anychart.anychart.AnyChart
-import com.anychart.anychart.AnyChartView
-import com.anychart.anychart.DataEntry
-import com.anychart.anychart.ValueDataEntry
-import com.anychart.anychart.Pie
 import com.bumptech.glide.Glide
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import mx.ddg.itesm.covid19.databinding.FragmentCountryGraphBinding
 import mx.ddg.itesm.covid19.viewmodel.CountryGraphViewModel
 
@@ -39,23 +38,24 @@ class CountryGraphFragment : Fragment() {
         subscribeCovidCountryData()
         subscribeCovidTimeSeriesData()
         viewModel.getCountryCovidData(args.countryName)
-        val pie = AnyChart.pie()
-
-        val data: MutableList<DataEntry> = ArrayList()
-        data.add(ValueDataEntry("John", 10000))
-        data.add(ValueDataEntry("Jake", 12000))
-        data.add(ValueDataEntry("Peter", 18000))
-        for (i in 0 until data.size) {
-            println(data[i].toString())
-        }
-        pie.setData(data)
-        binding.anyChartView.setChart(pie)
-        println("chart")
+        viewModel.getCountryTimeSeriesData(args.countryName, 935)
     }
 
     private fun subscribeCovidTimeSeriesData() {
         viewModel.countryTimeSeries.observe(viewLifecycleOwner) { countryTimeSeriesData ->
-            println(countryTimeSeriesData.name)
+            val data = ArrayList<Entry>()
+            var idx = 0
+            countryTimeSeriesData.timeline["cases"]?.forEach { dayCases ->
+                data.add(Entry(idx.toFloat(), dayCases.value.toFloat()))
+                idx += 1
+            }
+            val lineDataSet = LineDataSet(data, "Contagios")
+            val dataSets = ArrayList<ILineDataSet>()
+            dataSets.add(lineDataSet)
+            val lineData = LineData(dataSets)
+            binding.lineChartView.data = lineData
+            binding.lineChartView.invalidate()
+            binding.lineChartView.description.text = "COVID-19"
         }
     }
 
@@ -69,9 +69,6 @@ class CountryGraphFragment : Fragment() {
             binding.tvCurrentCountryCases.text = countryData.cases.toString()
             binding.tvCurrentCountryRecovered.text = countryData.recovered.toString()
             binding.tvCurrentCountryDead.text = countryData.deaths.toString()
-
-            // Trigger time series download
-            viewModel.getCountryTimeSeriesData(countryData.name, 5)
         }
     }
 }

@@ -107,9 +107,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="6"
             android:orientation="horizontal">
-
-            <com.anychart.anychart.AnyChartView
-                android:id="@+id/any_chart_view"
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChartView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>

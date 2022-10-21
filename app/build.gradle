@@ -60,7 +60,7 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.5.2'
 
     // Graphics
-    implementation 'com.github.AnyChart:AnyChart-Android:0.0.3'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
